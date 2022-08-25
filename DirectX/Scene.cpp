@@ -57,13 +57,13 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList *p
 {
 	m_pd3dGraphicsRootSignature = CreateGraphicsRootSignature(pd3dDevice);
 
-	CTriangleMesh* pMesh = new CTriangleMesh(pd3dDevice, pd3dCommandList);
+	CCubeMeshDiffused* pCubeMesh = new CCubeMeshDiffused(pd3dDevice, pd3dCommandList, 12.0f, 12.0f, 12.0f);
 
 	m_nObjects = 1;
 	m_ppObjects = new CGameObject*[m_nObjects];
 
 	CRotatingObject* pRotatingObject = new CRotatingObject();
-	pRotatingObject->SetMesh(pMesh);
+	pRotatingObject->SetMesh(pCubeMesh);
 
 	CDiffusedShader* pShader = new CDiffusedShader();
 	pShader->CreateShader(pd3dDevice, m_pd3dGraphicsRootSignature);
