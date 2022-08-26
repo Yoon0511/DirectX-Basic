@@ -170,6 +170,122 @@ void CShader::UpdateShaderVariable(ID3D12GraphicsCommandList* pd3dCommandList, X
 void CShader::ReleaseShaderVariables()
 {
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////
+
+CObjectsShader::CObjectsShader()
+{
+}
+
+CObjectsShader::~CObjectsShader()
+{
+}
+
+D3D12_INPUT_LAYOUT_DESC CObjectsShader::CreateInputLayout()
+{
+	UINT nInputElementDescs = 2;
+	D3D12_INPUT_ELEMENT_DESC* pd3dInputElementDescs = new D3D12_INPUT_ELEMENT_DESC[nInputElementDescs];
+	
+	pd3dInputElementDescs[0] = { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };
+	pd3dInputElementDescs[1] = { "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };
+	
+	D3D12_INPUT_LAYOUT_DESC d3dInputLayoutDesc;
+	d3dInputLayoutDesc.pInputElementDescs = pd3dInputElementDescs;
+	d3dInputLayoutDesc.NumElements = nInputElementDescs;
+
+	return d3dInputLayoutDesc;
+}
+
+D3D12_SHADER_BYTECODE CObjectsShader::CreateVertexShader(ID3DBlob** ppd3dShaderBlob)
+{
+	return(CShader::CompileShaderFromFile((wchar_t*)L"Shaders.hlsl", "VSDiffused", "vs_5_1",
+		ppd3dShaderBlob));
+}
+D3D12_SHADER_BYTECODE CObjectsShader::CreatePixelShader(ID3DBlob** ppd3dShaderBlob)
+{
+	return(CShader::CompileShaderFromFile((wchar_t*)L"Shaders.hlsl", "PSDiffused", "ps_5_1",
+		ppd3dShaderBlob));
+}
+
+void CObjectsShader::CreateShader(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dGraphicsRootSignature)
+{
+	m_nPipelineStates = 1;
+	m_ppd3dPipelineStates = new ID3D12PipelineState * [m_nPipelineStates];
+
+	CShader::CreateShader(pd3dDevice, pd3dGraphicsRootSignature);
+}
+
+void CObjectsShader::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
+{
+	CCubeMeshDiffused* pCubeMesh = new CCubeMeshDiffused(pd3dDevice, pd3dCommandList, 12.0f, 12.0f, 12.0f);
+
+	int xObjects = 10, yObjects = 10, zObjects = 10, i = 0;
+
+	m_nObjects = (xObjects * 2 + 1) * (yObjects * 2 + 1) * (zObjects * 2 + 1);
+	m_ppObjects = new CGameObject * [m_nObjects];
+	float fxPitch = 12.0f * 2.5f;
+	float fyPitch = 12.0f * 2.5f;
+	float fzPitch = 12.0f * 2.5f;
+	CRotatingObject* pRotatingObject = NULL;
+	for (int x = -xObjects; x <= xObjects; ++x)
+	{
+		for (int y = -yObjects; y <= yObjects; ++y)
+		{
+			for (int z = -zObjects; z <= zObjects; ++z)
+			{
+				pRotatingObject = new CRotatingObject();
+				pRotatingObject->SetMesh(pCubeMesh);
+				//각 정육면체 객체의 위치를 설정한다.
+				pRotatingObject->SetPosition(fxPitch*x, fyPitch*y, fzPitch*z);
+				pRotatingObject->SetRotationAxis(XMFLOAT3(0.0f, 1.0f, 0.0f));
+				pRotatingObject->SetRotationSpeed(10.0f * (i % 10) + 3.0f);
+				m_ppObjects[i++] = pRotatingObject;
+			}
+		}
+	}
+	CreateShaderVariables(pd3dDevice, pd3dCommandList);
+}
+
+void CObjectsShader::ReleaseObjects()
+{
+	if (m_ppObjects)
+	{
+		for (int i = 0; i < m_nObjects; ++i)
+		{
+			if (m_ppObjects[i]) delete m_ppObjects[i];
+		}
+		delete[] m_ppObjects;
+	}
+}
+
+void CObjectsShader::AnimateObjects(float fTimeElapsed)
+{
+	for (int i = 0; i < m_nObjects; ++i)
+	{
+		m_ppObjects[i]->Animate(fTimeElapsed);
+	}
+}
+
+void CObjectsShader::ReleaseUploadBuffers()
+{
+	if (m_ppObjects) {
+		for (int i = 0; i < m_nObjects; ++i)
+			m_ppObjects[i]->ReleaseUploadBuffers();
+	}
+}
+
+void CObjectsShader::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera)
+{
+	CShader::Render(pd3dCommandList, pCamera);
+
+	for (int i = 0; i < m_nObjects; ++i)
+	{
+		if (m_ppObjects[i])
+		{
+			m_ppObjects[i]->Render(pd3dCommandList, pCamera);
+		}
+	}
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////

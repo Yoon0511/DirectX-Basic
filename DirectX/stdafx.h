@@ -116,6 +116,12 @@ namespace Vector3
 		XMStoreFloat3(&m_xmf3Normal, XMVector3Normalize(XMLoadFloat3(&xmf3Vector)));
 		return(m_xmf3Normal);
 	}
+	inline XMFLOAT3 Normalize(XMFLOAT3&& xmf3Vector)
+	{
+		XMFLOAT3 m_xmf3Normal;
+		XMStoreFloat3(&m_xmf3Normal, XMVector3Normalize(XMLoadFloat3(&xmf3Vector)));
+		return(m_xmf3Normal);
+	}
 	inline float Length(XMFLOAT3& xmf3Vector)
 	{
 		XMFLOAT3 xmf3Result;

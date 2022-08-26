@@ -23,6 +23,10 @@ protected:
 	CShader* m_pShader = NULL;
 
 public:
+	virtual void CreateShaderVariables(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList);
+	virtual void UpdateShaderVariables(ID3D12GraphicsCommandList* pd3dCommandList);
+	virtual void ReleaseShaderVariables();
+
 	void ReleaseUploadBuffers();
 	virtual void SetMesh(CMesh* pMesh);
 	virtual void SetShader(CShader* pShader);
@@ -32,6 +36,20 @@ public:
 
 	virtual void OnPrepareRender();
 	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera *pCamera);
+
+	XMFLOAT3 GetPosition();
+	XMFLOAT3 GetLook();
+	XMFLOAT3 GetUp();
+	XMFLOAT3 GetRight();
+
+	void SetPosition(float x, float y, float z);
+	void SetPosition(XMFLOAT3 xmf3Position);
+
+	void MoveStrafe(float fDistance = 1.0f);
+	void MoveUp(float fDistance = 1.0f);
+	void MoveForward(float fDistance = 1.0f);
+
+	void Rotate(float fPitch = 10.0f, float fYaw = 10.0f, float fRoll = 10.0f);
 };
 
 class CRotatingObject : public CGameObject {
