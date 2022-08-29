@@ -67,10 +67,10 @@ protected:
 	int m_nObjects = 0;
 };
 
-class CDiffusedShader : public CShader {
+class CPlayerShader : public CShader {
 public:
-	CDiffusedShader();
-	virtual ~CDiffusedShader();
+	CPlayerShader();
+	virtual ~CPlayerShader();
 
 	virtual D3D12_INPUT_LAYOUT_DESC CreateInputLayout();
 

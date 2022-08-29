@@ -66,7 +66,7 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList *p
 	CRotatingObject* pRotatingObject = new CRotatingObject();
 	pRotatingObject->SetMesh(pCubeMesh);
 
-	CDiffusedShader* pShader = new CDiffusedShader();
+	CPlayerShader* pShader = new CPlayerShader();
 	pShader->CreateShader(pd3dDevice, m_pd3dGraphicsRootSignature);
 	pShader->CreateShaderVariables(pd3dDevice, pd3dCommandList);
 
