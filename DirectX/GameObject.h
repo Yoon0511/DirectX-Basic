@@ -16,8 +16,9 @@ public:
 	void AddRef() { m_nReferences++; }
 	void Release() { if (--m_nReferences <= 0) delete this; }
 
-protected:
 	XMFLOAT4X4 m_xmf4x4World;
+
+protected:
 	CMesh* m_pMesh = NULL;
 
 	CShader* m_pShader = NULL;
@@ -36,6 +37,7 @@ public:
 
 	virtual void OnPrepareRender();
 	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera *pCamera);
+	virtual void Render(ID3D12GraphicsCommandList* pd3dCommadnList, CCamera* pCamera, UINT nInstances, D3D12_VERTEX_BUFFER_VIEW d3dInstancingBufferView);
 
 	XMFLOAT3 GetPosition();
 	XMFLOAT3 GetLook();

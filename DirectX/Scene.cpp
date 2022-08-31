@@ -56,21 +56,21 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList *p
 {
 	m_pd3dGraphicsRootSignature = CreateGraphicsRootSignature(pd3dDevice);
 
-	CCubeMeshDiffused* pCubeMesh = new CCubeMeshDiffused(pd3dDevice, pd3dCommandList, 12.0f, 12.0f, 12.0f);
+	//CCubeMeshDiffused* pCubeMesh = new CCubeMeshDiffused(pd3dDevice, pd3dCommandList, 12.0f, 12.0f, 12.0f);
 
 	m_nShaders = 1;
-	m_pShaders = new CObjectsShader[m_nShaders];
+	m_pShaders = new CInstancingShader[m_nShaders];
 	m_pShaders[0].CreateShader(pd3dDevice, m_pd3dGraphicsRootSignature);
 	m_pShaders[0].BuildObjects(pd3dDevice, pd3dCommandList);
 
-	CRotatingObject* pRotatingObject = new CRotatingObject();
-	pRotatingObject->SetMesh(pCubeMesh);
+	//CRotatingObject* pRotatingObject = new CRotatingObject();
+	//pRotatingObject->SetMesh(pCubeMesh);
 
-	CPlayerShader* pShader = new CPlayerShader();
-	pShader->CreateShader(pd3dDevice, m_pd3dGraphicsRootSignature);
-	pShader->CreateShaderVariables(pd3dDevice, pd3dCommandList);
+	//CPlayerShader* pShader = new CPlayerShader();
+	//pShader->CreateShader(pd3dDevice, m_pd3dGraphicsRootSignature);
+	//pShader->CreateShaderVariables(pd3dDevice, pd3dCommandList);
 
-	pRotatingObject->SetShader(pShader);
+	//pRotatingObject->SetShader(pShader);
 
 }
 

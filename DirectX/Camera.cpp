@@ -81,9 +81,13 @@ void CCamera::GenerateViewMatrix()
 	m_xmf4x4View = Matrix4x4::LookAtLH(m_xmf3Position, m_xmf3LookAtWorld, m_xmf3Up);
 }
 
-void CCamera::GenerateViewMatrix(XMFLOAT3 xmf3Positon, XMFLOAT3 xmf3LooAt, XMFLOAT3 xmf3Up)
+void CCamera::GenerateViewMatrix(XMFLOAT3 xmf3Position, XMFLOAT3 xmf3LookAt, XMFLOAT3 xmf3Up)
 {
-	m_xmf4x4View = Matrix4x4::LookAtLH(xmf3Positon, xmf3LooAt, xmf3Up);
+	m_xmf3Position = xmf3Position;
+	m_xmf3LookAtWorld = xmf3LookAt;
+	m_xmf3Up = xmf3Up;
+
+	GenerateViewMatrix();
 }
 
 void CCamera::RegenerateViewMatrix()
