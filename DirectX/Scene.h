@@ -26,7 +26,6 @@ public:
 
 protected:
 	CInstancingShader* m_pShaders = NULL;
-	//CObjectsShader* m_pShaders = NULL;
 	int m_nShaders = 0;
 
 	ID3D12RootSignature* m_pd3dGraphicsRootSignature = NULL;

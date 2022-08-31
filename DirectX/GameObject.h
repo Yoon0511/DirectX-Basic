@@ -37,7 +37,7 @@ public:
 
 	virtual void OnPrepareRender();
 	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera *pCamera);
-	virtual void Render(ID3D12GraphicsCommandList* pd3dCommadnList, CCamera* pCamera, UINT nInstances, D3D12_VERTEX_BUFFER_VIEW d3dInstancingBufferView);
+	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera, UINT nInstances);
 
 	XMFLOAT3 GetPosition();
 	XMFLOAT3 GetLook();
