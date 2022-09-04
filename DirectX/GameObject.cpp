@@ -2,14 +2,31 @@
 #include "Shader.h"
 #include "GameObject.h"
 
-CGameObject::CGameObject()
+CGameObject::CGameObject(int nMeshes)
 {
-	XMStoreFloat4x4(&m_xmf4x4World, XMMatrixIdentity());
+	m_xmf4x4World = Matrix4x4::Identity();
+
+	m_nMeshes = nMeshes;
+	m_ppMeshes = NULL;
+	if (m_nMeshes > 0)
+	{
+		m_ppMeshes = new CMesh * [m_nMeshes];
+		for (int i = 0; i < m_nMeshes; ++i)
+			m_ppMeshes[i] = NULL;
+	}
 }
 
 CGameObject::~CGameObject()
 {
-	if (m_pMesh) m_pMesh->Release();
+	if (m_ppMeshes)
+	{
+		for (int i = 0; i < m_nMeshes; ++i)
+		{
+			if (m_ppMeshes[i]) m_ppMeshes[i]->Release();
+			m_ppMeshes[i] = NULL;
+		}
+		delete[] m_ppMeshes;
+	}
 	if (m_pShader)
 	{
 		m_pShader->ReleaseShaderVariables();
@@ -24,16 +41,25 @@ void CGameObject::SetShader(CShader* pShader)
 	if (m_pShader) m_pShader->AddRef();
 }	
 
-void CGameObject::SetMesh(CMesh* pMesh)
+void CGameObject::SetMesh(int nIndex, CMesh* pMesh)
 {
-	if (m_pMesh) m_pMesh->Release();
-	m_pMesh = pMesh;
-	if (m_pMesh) m_pMesh->AddRef();
+	if (m_ppMeshes)
+	{
+		if (m_ppMeshes[nIndex]) m_ppMeshes[nIndex]->Release();
+		m_ppMeshes[nIndex] = pMesh;
+		if (pMesh) pMesh->AddRef();
+	}
 }
 
 void CGameObject::ReleaseUploadBuffers()
 {
-	if (m_pMesh) m_pMesh->ReleaseUploadBuffers();
+	if (m_ppMeshes)
+	{
+		for (int i = 0; i < m_nMeshes; ++i)
+		{
+			m_ppMeshes[i]->ReleaseUploadBuffers();
+		}
+	}
 }
 
 void CGameObject::Animate(float fTimeElapsed)
@@ -56,14 +82,13 @@ void CGameObject::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera *pC
 	UpdateShaderVariables(pd3dCommandList);
 
 	if (m_pShader) m_pShader->Render(pd3dCommandList, pCamera);
-	if (m_pMesh) m_pMesh->Render(pd3dCommandList);
-}
-
-void CGameObject::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera, UINT nInstances)
-{
-	OnPrepareRender();
-
-	if (m_pMesh) m_pMesh->Render(pd3dCommandList, nInstances);
+	if (m_ppMeshes)
+	{
+		for (int i = 0; i < m_nMeshes; ++i)
+		{
+			if (m_ppMeshes[i]) m_ppMeshes[i]->Render(pd3dCommandList);
+		}
+	}
 }
 
 void CGameObject::Rotate(float fPitch, float fYaw, float fRoll)
@@ -146,10 +171,10 @@ void CGameObject::MoveForward(float fDistance)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////
 
-CRotatingObject::CRotatingObject()
+CRotatingObject::CRotatingObject(int nMeshes) : CGameObject(nMeshes)
 {
 	m_xmf3RotationAxis = XMFLOAT3(0.0f, 1.0f, 0.0f);
-	m_fRotationSpeed = 90.0f;
+	m_fRotationSpeed = 15.0f;
 }
 
 CRotatingObject::~CRotatingObject()
@@ -159,4 +184,48 @@ CRotatingObject::~CRotatingObject()
 void CRotatingObject::Animate(float fTimeElapsed)
 {
 	CGameObject::Rotate(&m_xmf3RotationAxis, m_fRotationSpeed * fTimeElapsed);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////
+
+CHeightMapTerrain::CHeightMapTerrain(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, ID3D12RootSignature* pd3dGraphicsRootSignature, LPCTSTR pFileName, int nWidth, int nLength, int nBlockWidth, int nBlockLength, XMFLOAT3 xmf3Scale, XMFLOAT4 xmf4Color) : CGameObject(0)
+{
+	m_nWidth = nWidth;
+	m_nLength = nLength;
+
+	int cxQuadPerBlock = nBlockWidth - 1;
+	int czQuadPerBlock = nBlockLength - 1;
+
+	m_xmf3Scale = xmf3Scale;
+	m_pHeightMapImage = new CHeightMapImage(pFileName, nWidth, nLength, xmf3Scale);
+
+	long cxBlocks = (m_nWidth - 1) / cxQuadPerBlock;
+	long czBlocks = (m_nLength - 1) / czQuadPerBlock;
+
+	m_nMeshes = cxBlocks * czBlocks;
+	m_ppMeshes = new CMesh * [m_nMeshes];
+	for (int i = 0; i < m_nMeshes; ++i)m_ppMeshes[i] = NULL;
+
+	CHeightMapGridMesh* pHeightMapGridMesh = NULL;
+	for (int z = 0, zStart = 0; z < czBlocks; ++z)
+	{
+		for (int x = 0, xStart = 0; x < cxBlocks; ++x)
+		{
+			xStart = x * (nBlockWidth - 1);
+			zStart = z * (nBlockLength - 1);
+
+			pHeightMapGridMesh = new CHeightMapGridMesh(pd3dDevice, pd3dCommandList, xStart, zStart, nBlockWidth, nBlockLength, xmf3Scale, xmf4Color, m_pHeightMapImage);
+			SetMesh(x + (z * cxBlocks), pHeightMapGridMesh);
+		}
+	}
+	
+	CTerrainShader* pShader = new CTerrainShader();
+	pShader->CreateShader(pd3dDevice, pd3dGraphicsRootSignature);
+	SetShader(pShader);
+}
+
+CHeightMapTerrain::~CHeightMapTerrain(void)
+{
+	if (m_pHeightMapImage) delete m_pHeightMapImage;
 }

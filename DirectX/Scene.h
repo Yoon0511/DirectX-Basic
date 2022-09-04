@@ -25,8 +25,14 @@ public:
 	ID3D12RootSignature* GetGraphicsRootSignature();
 
 protected:
-	CInstancingShader* m_pShaders = NULL;
+	CHeightMapTerrain* m_pTerrain = NULL;
+
+	CObjectsShader* m_pShaders = NULL;
+	//CInstancingShader* m_pShaders = NULL;
 	int m_nShaders = 0;
 
 	ID3D12RootSignature* m_pd3dGraphicsRootSignature = NULL;
+
+public:
+	CHeightMapTerrain* GetTerrain() { return m_pTerrain; }
 };
