@@ -277,7 +277,7 @@ CCamera* CAirplanePlayer::ChangeCamera(DWORD nNewCameraMode, float fTimeElapsed)
 	case FIRST_PERSON_CAMERA:
 		SetFriction(200.0f);
 		SetGravity(XMFLOAT3(0.0f, 0.0f, 0.0f));
-		SetMaxVelocityXZ(125.0f);
+		SetMaxVelocityXZ(500.0f);
 		SetMaxVelocityY(400.0f);
 		m_pCamera = OnChangeCamera(FIRST_PERSON_CAMERA, nCurrentCameraMode);
 		m_pCamera->SetTimeLag(0.0f);
@@ -289,7 +289,7 @@ CCamera* CAirplanePlayer::ChangeCamera(DWORD nNewCameraMode, float fTimeElapsed)
 	case SPACESHIP_CAMERA:
 		SetFriction(200.0f);
 		SetGravity(XMFLOAT3(0.0f, 0.0f, 0.0f));
-		SetMaxVelocityXZ(125.0f);
+		SetMaxVelocityXZ(500.0f);
 		SetMaxVelocityY(400.0f);
 		m_pCamera = OnChangeCamera(SPACESHIP_CAMERA, nCurrentCameraMode);
 		m_pCamera->SetTimeLag(0.0f);
@@ -301,7 +301,7 @@ CCamera* CAirplanePlayer::ChangeCamera(DWORD nNewCameraMode, float fTimeElapsed)
 	case THIRD_PERSON_CAMERA:
 		SetFriction(250.0f);
 		SetGravity(XMFLOAT3(0.0f, 0.0f, 0.0f));
-		SetMaxVelocityXZ(125.0f);
+		SetMaxVelocityXZ(500.0f);
 		SetMaxVelocityY(400.0f);
 		m_pCamera = OnChangeCamera(THIRD_PERSON_CAMERA, nCurrentCameraMode);
 		m_pCamera->SetTimeLag(0.25f);
@@ -355,9 +355,9 @@ CCamera* CTerrainPlayer::ChangeCamera(DWORD nNewCameraMode, float fTimeElapsed)
 	switch (nNewCameraMode)
 	{
 	case FIRST_PERSON_CAMERA:
-		SetFriction(250.0f);
-		SetGravity(XMFLOAT3(0.0f, -250.0f, 0.0f));
-		SetMaxVelocityXZ(300.0f);
+		SetFriction(30.0f);
+		SetGravity(XMFLOAT3(0.0f, -2500.0f, 0.0f));
+		SetMaxVelocityXZ(3000.0f);
 		SetMaxVelocityY(400.0f);
 		m_pCamera = OnChangeCamera(FIRST_PERSON_CAMERA, nCurrentCameraMode);
 		m_pCamera->SetTimeLag(0.0f);
@@ -365,9 +365,9 @@ CCamera* CTerrainPlayer::ChangeCamera(DWORD nNewCameraMode, float fTimeElapsed)
 		m_pCamera->GenerateProjectionMatrix(1.01f, 50000.0f, ASPECT_RATIO, 60.0f);
 		break;
 	case SPACESHIP_CAMERA:
-		SetFriction(125.0f);
+		SetFriction(30.0f);
 		SetGravity(XMFLOAT3(0.0f, 0.0f, 0.0f));
-		SetMaxVelocityXZ(300.0f);
+		SetMaxVelocityXZ(3000.0f);
 		SetMaxVelocityY(400.0f);
 		m_pCamera = OnChangeCamera(SPACESHIP_CAMERA, nCurrentCameraMode);
 		m_pCamera->SetTimeLag(0.0f);
@@ -375,9 +375,9 @@ CCamera* CTerrainPlayer::ChangeCamera(DWORD nNewCameraMode, float fTimeElapsed)
 		m_pCamera->GenerateProjectionMatrix(1.01f, 50000.0f, ASPECT_RATIO, 60.0f);
 		break;
 	case THIRD_PERSON_CAMERA:
-		SetFriction(250.0f);
-		SetGravity(XMFLOAT3(0.0f, -250.0f, 0.0f));
-		SetMaxVelocityXZ(300.0f);
+		SetFriction(30.0f);
+		SetGravity(XMFLOAT3(0.0f, -2500.0f, 0.0f));
+		SetMaxVelocityXZ(3000.0f);
 		SetMaxVelocityY(400.0f);
 		m_pCamera = OnChangeCamera(THIRD_PERSON_CAMERA, nCurrentCameraMode);
 		m_pCamera->SetTimeLag(0.25f);
