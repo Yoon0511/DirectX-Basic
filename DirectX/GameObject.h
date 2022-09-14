@@ -18,6 +18,8 @@ public:
 
 	XMFLOAT4X4 m_xmf4x4World;
 
+	bool IsVisible(UINT nIndex, CCamera* pCamera = NULL);
+
 protected:
 	CMesh** m_ppMeshes = NULL;
 	int m_nMeshes = 0;

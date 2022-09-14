@@ -13,6 +13,7 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+#include <algorithm>
 
 #include <string>
 #include <wrl.h>
@@ -41,6 +42,11 @@ using Microsoft::WRL::ComPtr;
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "dxguid.lib")
+
+//#include <iostream>
+//#pragma comment(linker,"/entry:wWinMainCRTStartup /subsystem:console")
+//#ifdef _DEBUG
+//#endif
 
 #define FRAME_BUFFER_WIDTH 800
 #define FRAME_BUFFER_HEIGHT 600

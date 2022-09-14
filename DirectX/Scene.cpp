@@ -116,9 +116,8 @@ void CScene::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera *pCamera
 	pCamera->SetViewportsAndScissorRects(pd3dCommandList);
 	pd3dCommandList->SetGraphicsRootSignature(m_pd3dGraphicsRootSignature);
 	pCamera->UpdateShaderVariables(pd3dCommandList);
-
+	
 	if (m_pTerrain) m_pTerrain->Render(pd3dCommandList, pCamera);
-
 	for (int i = 0; i < m_nShaders; ++i)
 	{
 		m_pShaders[i].Render(pd3dCommandList, pCamera);

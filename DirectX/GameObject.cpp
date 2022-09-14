@@ -86,7 +86,7 @@ void CGameObject::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera *pC
 	{
 		for (int i = 0; i < m_nMeshes; ++i)
 		{
-			if (m_ppMeshes[i]) m_ppMeshes[i]->Render(pd3dCommandList);
+			if (IsVisible(i, pCamera) && m_ppMeshes[i]) m_ppMeshes[i]->Render(pd3dCommandList);
 		}
 	}
 }
@@ -166,6 +166,17 @@ void CGameObject::MoveForward(float fDistance)
 	XMFLOAT3 xmf3Look = GetLook();
 	xmf3Position = Vector3::Add(xmf3Position, xmf3Look, fDistance);
 	CGameObject::SetPosition(xmf3Position);
+}
+
+bool CGameObject::IsVisible(UINT nIndex, CCamera* pCamera)
+{
+	bool bIsVisible = false;
+	BoundingOrientedBox xmBoundingBox = m_ppMeshes[nIndex]->GetBoundingBox();
+
+	xmBoundingBox.Transform(xmBoundingBox, XMLoadFloat4x4(&m_xmf4x4World));
+	if (pCamera) bIsVisible = pCamera->IsInFrustum(xmBoundingBox);
+
+	return bIsVisible;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////

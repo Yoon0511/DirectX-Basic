@@ -26,6 +26,8 @@ public:
 		m_xmf4Diffuse = xmf4Diffuse;
 	}
 	~CDiffusedVertex() {}
+
+	XMFLOAT3 GetPosition() { return m_xmf3Position; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -64,10 +66,14 @@ protected:
 	UINT m_nVertices = 0;
 	UINT m_nStride = 0;
 	UINT m_nOffset = 0;
+	
+	BoundingOrientedBox m_xmBoundingBox;
 
 public:
 	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, UINT nInstances = 1);
 	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, UINT nInstances, D3D12_VERTEX_BUFFER_VIEW d3dInstancingBufferView);
+
+	BoundingOrientedBox GetBoundingBox() { return m_xmBoundingBox; }
 };
 
 class CTriangleMesh : public CMesh {

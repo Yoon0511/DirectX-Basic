@@ -2,12 +2,12 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\jgh21\source\repos\DirectX\x64\Debug\DirectX.exe</FullPath>
+      <FullPath>C:\Users\jgh21\source\repos\DirectX-Basic\x64\Debug\DirectX.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>C:\Users\jgh21\source\repos\DirectX\x64\Debug\Shaders.cso</FullPath>
+      <FullPath>C:\Users\jgh21\source\repos\DirectX-Basic\x64\Debug\Shaders.cso</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />

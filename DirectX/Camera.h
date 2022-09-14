@@ -38,6 +38,8 @@ protected:
 
 	CPlayer* m_pPlayer = NULL;
 
+	BoundingFrustum m_xmFrustum;
+
 public:
 	CCamera();
 	CCamera(CCamera* pCamera);
@@ -97,6 +99,9 @@ public:
 	virtual void Rotate(float fPitch = 0.0f, float fYaw = 0.0f, float fRoll = 0.0f) {}
 	virtual void Update(XMFLOAT3& xmf3LookAt, float fTimeElapsed) {}
 	virtual void SetLookAt(XMFLOAT3& xmf3LookAt) {}
+
+	void GenerateFrustum();
+	bool IsInFrustum(BoundingOrientedBox& xmBoundingBox);
 };
 
 class CSpaceShipCamera : public CCamera {

@@ -121,6 +121,8 @@ CCubeMeshDiffused::CCubeMeshDiffused(ID3D12Device* pd3dDevice, ID3D12GraphicsCom
 	m_d3dIndexBufferView.BufferLocation = m_pd3dIndexBuffer->GetGPUVirtualAddress();
 	m_d3dIndexBufferView.Format = DXGI_FORMAT_R32_UINT;
 	m_d3dIndexBufferView.SizeInBytes = sizeof(UINT) * m_nIndices;
+
+	m_xmBoundingBox = BoundingOrientedBox(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(fx, fy, fz), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
 CCubeMeshDiffused::~CCubeMeshDiffused()
@@ -299,6 +301,8 @@ CAirplaneMeshDiffused::CAirplaneMeshDiffused(ID3D12Device* pd3dDevice, ID3D12Gra
 	m_d3dVertexBufferView.BufferLocation = m_pd3dVertexBuffer->GetGPUVirtualAddress();
 	m_d3dVertexBufferView.StrideInBytes = m_nStride;
 	m_d3dVertexBufferView.SizeInBytes = m_nStride * m_nVertices;
+
+	m_xmBoundingBox = BoundingOrientedBox(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(fx, fy, fz), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
 CAirplaneMeshDiffused::~CAirplaneMeshDiffused()
@@ -421,6 +425,10 @@ CHeightMapGridMesh::CHeightMapGridMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsC
 		}
 	}
 
+	int fx = std::max_element(pVertices, pVertices + m_nVertices, [](CDiffusedVertex& lhs, CDiffusedVertex rhs) {return lhs.GetPosition().x < rhs.GetPosition().x; })->GetPosition().x * 0.5f;
+	int fy = std::max_element(pVertices, pVertices + m_nVertices, [](CDiffusedVertex& lhs, CDiffusedVertex rhs) {return lhs.GetPosition().y < rhs.GetPosition().y; })->GetPosition().y * 0.5f;
+	int fz = std::max_element(pVertices, pVertices + m_nVertices, [](CDiffusedVertex& lhs, CDiffusedVertex rhs) {return lhs.GetPosition().z < rhs.GetPosition().z; })->GetPosition().z * 0.5f;
+
 	m_pd3dVertexBuffer = CreateBufferResource(pd3dDevice, pd3dCommandList, pVertices, m_nStride * m_nVertices, D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_pd3dVertexUploadBuffer);
 	m_d3dVertexBufferView.BufferLocation = m_pd3dVertexBuffer->GetGPUVirtualAddress();
 	m_d3dVertexBufferView.StrideInBytes = m_nStride;
@@ -459,6 +467,8 @@ CHeightMapGridMesh::CHeightMapGridMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsC
 	m_d3dIndexBufferView.SizeInBytes = sizeof(UINT) * m_nIndices;
 
 	delete[] pnIndices;
+
+	m_xmBoundingBox = BoundingOrientedBox(XMFLOAT3(fx, fy, fz), XMFLOAT3(fx, fy, fz), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
 CHeightMapGridMesh::~CHeightMapGridMesh()
