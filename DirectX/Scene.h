@@ -24,6 +24,8 @@ public:
 	ID3D12RootSignature* CreateGraphicsRootSignature(ID3D12Device* pd3dDevice);
 	ID3D12RootSignature* GetGraphicsRootSignature();
 
+	CGameObject* PickObjectPointedByCursor(int xClient, int yClient, CCamera* pCamera);
+
 protected:
 	CHeightMapTerrain* m_pTerrain = NULL;
 

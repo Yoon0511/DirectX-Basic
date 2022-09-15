@@ -227,8 +227,9 @@ void CObjectsShader::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsComman
 	int xObjects = int(fTerrainWidth / fxPitch), yObjects = 1, zObjects = int(fTerrainLength / fzPitch);
 	m_nObjects = xObjects * yObjects * zObjects;
 	m_ppObjects = new CGameObject * [m_nObjects];
-	CCubeMeshDiffused* pCubeMesh = new CCubeMeshDiffused(pd3dDevice, pd3dCommandList,
-		12.0f, 12.0f, 12.0f);
+	CCubeMeshDiffused* pCubeMesh = new CCubeMeshDiffused(pd3dDevice, pd3dCommandList, 12.0f, 12.0f, 12.0f);
+	CSphereMeshDiffused* pSphereMesh = new CSphereMeshDiffused(pd3dDevice, pd3dCommandList, 6.0f, 20, 20);
+
 	XMFLOAT3 xmf3RotateAxis, xmf3SurfaceNormal;
 	CRotatingObject* pRotatingObject = NULL;
 	for (int i = 0, x = 0; x < xObjects; x++)
@@ -238,6 +239,7 @@ void CObjectsShader::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsComman
 			for (int y = 0; y < yObjects; y++)
 			{
 				pRotatingObject = new CRotatingObject(1);
+				//pRotatingObject->SetMesh((i % 2) ? (CMesh*)pCubeMesh : (CMesh*)pSphereMesh);
 				pRotatingObject->SetMesh(0, pCubeMesh);
 				float xPosition = x * fxPitch;
 				float zPosition = z * fzPitch;
@@ -303,6 +305,25 @@ void CObjectsShader::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera*
 			m_ppObjects[i]->Render(pd3dCommandList, pCamera);
 		}
 	}
+}
+
+CGameObject* CObjectsShader::PickObjectByRayIntersection(XMFLOAT3& xmf3PickPosition, XMFLOAT4X4& xmf4x4View, float* pfNearHitDistance)
+{
+	int nIntersected;
+	*pfNearHitDistance = FLT_MAX;
+	float fHitDistance = FLT_MAX;
+	CGameObject* pSelectedObject = NULL;
+	for (int i = 0; i < m_nObjects; ++i)
+	{
+		nIntersected = m_ppObjects[i]->PickObjectByRayIntersection(xmf3PickPosition, xmf4x4View, &fHitDistance);
+		if ((nIntersected > 0) && (fHitDistance < *pfNearHitDistance))
+		{
+			*pfNearHitDistance = fHitDistance;
+			pSelectedObject = m_ppObjects[i];
+		}
+	}
+
+	return pSelectedObject;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////

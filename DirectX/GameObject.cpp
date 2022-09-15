@@ -179,6 +179,32 @@ bool CGameObject::IsVisible(UINT nIndex, CCamera* pCamera)
 	return bIsVisible;
 }
 
+void CGameObject::GenerateRayForPicking(XMFLOAT3& xmf3PickPosition, XMFLOAT4X4& xmf4x4View, XMFLOAT3* pxmf3PickRayOrigin, XMFLOAT3* pxmf3PickRayDirection)
+{
+	XMFLOAT4X4 xmf4x4WorldView = Matrix4x4::Multiply(m_xmf4x4World, xmf4x4View);
+	XMFLOAT4X4 xmf4x4Inverse = Matrix4x4::Inverse(xmf4x4WorldView);
+	XMFLOAT3 xmf3CameraOrigin(0.0f, 0.0f, 0.0f);
+
+	*pxmf3PickRayOrigin = Vector3::TransformCoord(xmf3CameraOrigin, xmf4x4Inverse);
+	*pxmf3PickRayDirection = Vector3::TransformCoord(xmf3PickPosition, xmf4x4Inverse);
+	*pxmf3PickRayDirection = Vector3::Normalize(Vector3::Subtract(*pxmf3PickRayDirection, *pxmf3PickRayOrigin));
+}
+
+int CGameObject::PickObjectByRayIntersection(XMFLOAT3& xmf3PickPosition, XMFLOAT4X4& xmf4x4View, float* pfHitDistance)
+{
+	int nIntersected = 0;
+	for (int i = 0; i < m_nMeshes; ++i)
+	{
+		if (m_ppMeshes[i])
+		{
+			XMFLOAT3 xmf3PickRayOrigin, xmf3PickRayDirection;
+			GenerateRayForPicking(xmf3PickPosition, xmf4x4View, &xmf3PickRayOrigin, &xmf3PickRayDirection);
+
+			nIntersected += m_ppMeshes[i]->CheckRayIntersection(xmf3PickRayOrigin, xmf3PickRayDirection, pfHitDistance);
+		}
+	}
+	return nIntersected;
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////
 

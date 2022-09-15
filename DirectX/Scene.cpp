@@ -134,3 +134,32 @@ ID3D12RootSignature* CScene::GetGraphicsRootSignature()
 {
 	return m_pd3dGraphicsRootSignature;
 }
+
+CGameObject* CScene::PickObjectPointedByCursor(int xClient, int yClient, CCamera *pCamera)
+{
+	if (!pCamera) return NULL;
+
+	XMFLOAT4X4 xmf4x4View = pCamera->GetViewMatrix();
+	XMFLOAT4X4 xmf4x4Projection = pCamera->GetProjectionMatrix();
+	D3D12_VIEWPORT d3dViewport = pCamera->GetViewport();
+	
+	XMFLOAT3 xmf3PickPosition;
+	xmf3PickPosition.x = (((2.0f * xClient) / d3dViewport.Width) - 1) / xmf4x4Projection._11;
+	xmf3PickPosition.y = -(((2.0f * yClient) / d3dViewport.Height) - 1) / xmf4x4Projection._22;
+	xmf3PickPosition.z = 1.0f;
+
+	int nIntersected = 0;
+	float fHitDistance = FLT_MAX, fNearestHitDistance = FLT_MAX;
+	CGameObject* pIntersectedObject = NULL, * pNearestObject = NULL;
+	for (int i = 0; i < m_nShaders; ++i)
+	{
+		pIntersectedObject = m_pShaders[i].PickObjectByRayIntersection(xmf3PickPosition, xmf4x4View, &fHitDistance);
+		if (pIntersectedObject && (fHitDistance < fNearestHitDistance))
+		{
+			fNearestHitDistance = fHitDistance;
+			pNearestObject = pIntersectedObject;
+		}
+	}
+	
+	return pNearestObject;
+}

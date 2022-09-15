@@ -66,12 +66,17 @@ protected:
 	UINT m_nVertices = 0;
 	UINT m_nStride = 0;
 	UINT m_nOffset = 0;
+
+	CDiffusedVertex* m_pVertices = NULL;
+	UINT* m_pnIndices = NULL;
 	
 	BoundingOrientedBox m_xmBoundingBox;
 
 public:
 	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, UINT nInstances = 1);
 	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, UINT nInstances, D3D12_VERTEX_BUFFER_VIEW d3dInstancingBufferView);
+
+	int CheckRayIntersection(XMFLOAT3& xmRayPosition, XMFLOAT3& xmRayDirection, float* pfNearHitDistance);
 
 	BoundingOrientedBox GetBoundingBox() { return m_xmBoundingBox; }
 };
@@ -92,6 +97,12 @@ class CAirplaneMeshDiffused : public CMesh {
 public:
 	CAirplaneMeshDiffused(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, float fWidth = 20.0f, float fHeight = 20.0f, float fDepth = 4.0f, XMFLOAT4 xmf4Color = XMFLOAT4(1.0f, 1.0f, 0.0f, 0.0f));
 	virtual ~CAirplaneMeshDiffused();
+};
+
+class CSphereMeshDiffused : public CMesh {
+public:
+	CSphereMeshDiffused(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, float fRadius = 2.0f, int nSlices = 20, int nStacks = 20);
+	virtual ~CSphereMeshDiffused();
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////

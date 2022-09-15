@@ -346,14 +346,21 @@ void CGameFramework::ProcessInput()
 	}
 	if ((dwDirection != 0) || (cxDelta != 0.0f) || (cyDelta != 0.0f))
 	{
-		if (cxDelta || cyDelta)
+		if (m_pSelectedObject)
 		{
-			if (pKeyBuffer[VK_RBUTTON] & 0xF0)
-				m_pPlayer->Rotate(cyDelta, 0.0f, -cxDelta);
-			else
-				m_pPlayer->Rotate(cyDelta, cxDelta, 0.0f);
+			ProcessSelectedObject(dwDirection, cxDelta, cyDelta);
 		}
-		if (dwDirection) m_pPlayer->Move(dwDirection, 50.0f * m_GameTimer.GetTimeElapsed(), true);
+		else
+		{
+			if (cxDelta || cyDelta)
+			{
+				if (pKeyBuffer[VK_RBUTTON] & 0xF0)
+					m_pPlayer->Rotate(cyDelta, 0.0f, -cxDelta);
+				else
+					m_pPlayer->Rotate(cyDelta, cxDelta, 0.0f);
+			}
+			if (dwDirection) m_pPlayer->Move(dwDirection, 50.0f * m_GameTimer.GetTimeElapsed(), true);
+		}
 	}
 
 	m_pPlayer->Update(m_GameTimer.GetTimeElapsed());
@@ -445,11 +452,29 @@ void CGameFramework::MoveToNextFrame()
 
 }
 
+void CGameFramework::ProcessSelectedObject(DWORD dwDirection, float cxDelta, float cyDelta)
+{
+	if (dwDirection != 0)
+	{
+		if (dwDirection & DIR_FORWARD) m_pSelectedObject->MoveForward(+1.0f);
+		if (dwDirection & DIR_BACKWARD) m_pSelectedObject->MoveForward(-1.0f);
+		if (dwDirection & DIR_LEFT) m_pSelectedObject->MoveStrafe(+1.0f);
+		if (dwDirection & DIR_RIGHT) m_pSelectedObject->MoveStrafe(-1.0f);
+		if (dwDirection & DIR_UP) m_pSelectedObject->MoveUp(+1.0f);
+		if (dwDirection & DIR_DOWN) m_pSelectedObject->MoveUp(-1.0f);
+	}
+	else if ((cxDelta != 0.0f) || (cyDelta != 0.0f))
+	{
+		m_pSelectedObject->Rotate(cyDelta, cxDelta, 0.0f);
+	}
+}
+
 void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
 	switch (nMessageID) {
 	case WM_LBUTTONDOWN:
 	case WM_RBUTTONDOWN:
+		m_pSelectedObject = m_pScene->PickObjectPointedByCursor(LOWORD(lParam), HIWORD(lParam), m_pCamera);
 		SetCapture(hWnd);
 		GetCursorPos(&m_ptOldCursorPos);
 		break;

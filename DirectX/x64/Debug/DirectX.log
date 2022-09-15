@@ -1,2 +1,22 @@
-﻿  GameObject.cpp
+﻿  Camera.cpp
+  CGameFramework.cpp
+C:\Users\jgh21\source\repos\DirectX-Basic\DirectX\CGameFramework.cpp(500,71): warning C4244: '인수': 'WPARAM'에서 'DWORD'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  DirectX.cpp
+  GameObject.cpp
+  Mesh.cpp
+C:\Users\jgh21\source\repos\DirectX-Basic\DirectX\Mesh.cpp(549,9): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\jgh21\source\repos\DirectX-Basic\DirectX\Mesh.cpp(550,9): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\jgh21\source\repos\DirectX-Basic\DirectX\Mesh.cpp(551,9): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\jgh21\source\repos\DirectX-Basic\DirectX\Mesh.cpp(592,57): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\jgh21\source\repos\DirectX-Basic\DirectX\Mesh.cpp(592,53): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\jgh21\source\repos\DirectX-Basic\DirectX\Mesh.cpp(592,49): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\jgh21\source\repos\DirectX-Basic\DirectX\Mesh.cpp(592,79): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\jgh21\source\repos\DirectX-Basic\DirectX\Mesh.cpp(592,75): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\jgh21\source\repos\DirectX-Basic\DirectX\Mesh.cpp(592,71): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\jgh21\source\repos\DirectX-Basic\DirectX\Mesh.cpp(622,27): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Player.cpp
+  Scene.cpp
+  Shader.cpp
+C:\Users\jgh21\source\repos\DirectX-Basic\DirectX\Shader.cpp(256,19): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다...
   DirectX.vcxproj -> C:\Users\jgh21\source\repos\DirectX-Basic\x64\Debug\DirectX.exe

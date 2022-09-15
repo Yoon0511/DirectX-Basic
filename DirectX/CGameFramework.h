@@ -69,6 +69,8 @@ public:
 	void FrameAdvance();		//프레임워크의 핵심 중 렌더링을 구성하는 함수이다.
 	void WaitForGpuComplete();	//CPU와 GPU를 동기화하는 함수이다. 
 
+	void ProcessSelectedObject(DWORD dwDirection, float cxDelta, float cyDelta);
+
 	void OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 	void OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 	LRESULT CALLBACK OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);	//윈도우의 메시지(키보드, 마우스 입력)를 처리하는 함수이다.
@@ -81,6 +83,8 @@ public:
 	CCamera* m_pCamera = NULL;
 
 	CPlayer* m_pPlayer = NULL;
+
+	CGameObject* m_pSelectedObject = NULL;
 
 	POINT m_ptOldCursorPos;
 };
